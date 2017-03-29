@@ -76,6 +76,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 	int centerX = 0;
 	int centerY = 0;
 	long lastTimeSeen = 0;
+	boolean seenAtLeastOnce = false;
 	int numberOfContours = 0;
 	int separationDistance = 0;
 	Compressor C = new Compressor(0);
@@ -213,6 +214,9 @@ private static final int GEARDROP_DISTANCE = 1300;
 					 lastTimeSeen = System.currentTimeMillis();
 					 centerX = separationDistance/2+centerXSmallerValue;
 					 centerY = centerYr1;
+					 if (autoState == AutoState.VISION){
+						 seenAtLeastOnce = true;
+					 }
 				 }
 			}
 		});
@@ -266,7 +270,8 @@ private static final int GEARDROP_DISTANCE = 1300;
 		visionTrackingCamera();
 //		Change line below to change code for position of robot LEFt/RIGHT/CENTER
 		centerX = 160;
-		startPosition = StartPosition.RIGHT;
+		seenAtLeastOnce = false;
+		startPosition = StartPosition.LEFT;
 		
 		timer.reset();
 		if (startPosition == StartPosition.LEFT){
@@ -338,8 +343,11 @@ private static final int GEARDROP_DISTANCE = 1300;
 			break;
 		case BACKUP:
 			if (timer.get() - gearDropFinished < 0.5) {
-				myRobot.drive(0.15, 0.0);
+				myRobot.drive(0.30, 0.0);
+			}else{
+				myRobot.drive(0.0, 0.0);
 			}
+			
 			break;
 		}
 			
@@ -356,10 +364,9 @@ private static final int GEARDROP_DISTANCE = 1300;
 			curve = 0.0;
 			if (System.currentTimeMillis() - lastTimeSeen < 250){
 				curve = (((double) centerX) - 160.0) / 400.0;
-
 				myRobot.drive(-0.30, curve);
 			}
-			if (timer.get() < 8.0){
+			if (timer.get() > 7.5){
 				myRobot.drive(0.0, 0.0);
 				autoState = AutoState.GEARDROP;
 				visionFinished = timer.get();
