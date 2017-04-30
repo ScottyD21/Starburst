@@ -100,9 +100,11 @@ private static final int GEARDROP_DISTANCE = 1300;
 		VISION,
 		DELIVERY,
 		GEARDROP,
+		FOLLOW,
 		BACKUP
 	}
 	enum StartPosition {
+		FOLLOW,
 		LEFT,
 		RIGHT,
 		CENTER
@@ -144,6 +146,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 	
 		
 	}
+//	Troubleshoots robots. Identifies which robot code is being uploaded to and uses a specific motorsetup. WARNING Resetting roborio will make code unusable.
 	private void motorSetup(double speedFactor, boolean safetyEnabled) {
 		File cpuInfoFile = new File("/etc/RobotName");
 		String line = null;
@@ -186,7 +189,9 @@ private static final int GEARDROP_DISTANCE = 1300;
 			myRobot.setSafetyEnabled(safetyEnabled);
 		}
 	}
+
 	private void visionTrackingCamera() {
+//		Used grip program to filter and identify reflective tape. Finds middle of tape and calculates distance based on the distance between two tapes
 		// TODO Auto-generated method stub
 		camera.setResolution(320, 240);
 		Object imgLock = new Object();
@@ -268,10 +273,10 @@ private static final int GEARDROP_DISTANCE = 1300;
 	public void autonomousInit() {
 		motorSetup(1.0, false);
 		visionTrackingCamera();
-//		Change line below to change code for position of robot LEFt/RIGHT/CENTER
+//		Change line below to change code for position of robot LEFt/RIGHT/CENTER to determine case scenarios
 		centerX = 160;
 		seenAtLeastOnce = false;
-		startPosition = StartPosition.LEFT;
+		startPosition = StartPosition.FOLLOW;
 		
 		timer.reset();
 		if (startPosition == StartPosition.LEFT){
@@ -290,11 +295,10 @@ private static final int GEARDROP_DISTANCE = 1300;
 	 */
 	@Override
 	public void autonomousPeriodic() {
-//		if (timer.get() < 1.0) {
-//			myRobot.drive(-0.6, 0.0);
-//		}else if (timer.get() <1.5) {
-//			myRobot.tankDrive(-0.4, 0.4);
+// Code for each starting position. Tells robot to drive straight for certain amount of time, then turn for a specific amount of time. Switches to vision and finally opens hand and backs up
 		switch (autoState) {
+		case FOLLOW:
+			autoState = AutoState.VISION;
 		case STARTCENTER:
 			autoState = AutoState.VISION;
 			break;
@@ -320,18 +324,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 		case VISION:
 			visionDrive();
 			break;
-//		case DELIVERY:
-//			System.out.println("IR Value" + irSensor.getAverageValue());
-//			if (irSensor.getAverageValue() > GEARDROP_DISTANCE){
-//				
-//				myRobot.drive(0.0, 0.0);
-//				autoState = AutoState.GEARDROP;
-//				visionFinished = timer.get();
-//			}else{
-//				double magnitude = ((double)(GEARDROP_DISTANCE - irSensor.getAverageValue())) / ((double)GEARDROP_DISTANCE);
-//				myRobot.drive(-0.1 - magnitude * 0.2, 0.0);
-//			}
-//			break;
+
 				
 		case GEARDROP:
 			System.out.println("Changing Autostate to Backup");
@@ -357,21 +350,25 @@ private static final int GEARDROP_DISTANCE = 1300;
 		
 	}
 	private void visionDrive() {
-
-		
-		
+// Follows and tracks tape, drives towards it
 			double curve;
 			curve = 0.0;
 			if (System.currentTimeMillis() - lastTimeSeen < 250){
 				curve = (((double) centerX) - 160.0) / 400.0;
-				myRobot.drive(-0.30, curve);
+				myRobot.drive(-0.15, curve);
 			}
-			if (timer.get() > 7.5){
-				myRobot.drive(0.0, 0.0);
-				autoState = AutoState.GEARDROP;
-				visionFinished = timer.get();
+			if (separationDistance > 150){
+				myRobot.drive(0.0, curve);
+			}
+			
+			
+//			}
+//			if (timer.get() > 7.5){
+//				myRobot.drive(0.0, 0.0);
+//				autoState = AutoState.GEARDROP;
+//				visionFinished = timer.get();
 	}
-			}
+			
 
 	/**
 	 * This function is called once each time the robot enters tele-operated
@@ -379,6 +376,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 	 */
 	@Override
 	public void teleopInit() {
+//		Power of the motor. 1= 100% and 0=0% 90% is optimal 
 		motorSetup(0.90, true);
 		if (visionThread != null) {
 			visionThread.interrupt();
@@ -401,7 +399,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 		
 	
 
-//		Solenoids Control
+//		Solenoids Control for pneumatics. Assigns solenoid to button on controller and sets a position depending on button pressed
 		if (Drivestick.getRawButton(3) || Armstick.getRawButton(3)) {
 			Piston1.set(DoubleSolenoid.Value.kReverse);
 			Piston2.set(DoubleSolenoid.Value.kReverse);
@@ -447,7 +445,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 		}
 	}
 	
-
+// Good luck next years students. I hardly understood the code, hope you can figure it out suckers -Scott Dong P.S. Be good to Stella and take care of her. Tell her I love her
 	/**
 	 * This function is called periodically during test mode
 	 */
