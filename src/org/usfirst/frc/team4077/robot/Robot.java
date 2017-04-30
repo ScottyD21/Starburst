@@ -56,11 +56,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
  * directory.
  */
 
-//Note to thy self. Ye of little faith giveth up not hope -Scott Dong
+//Note to thy self and all future students. Ye of little faith giveth up not hope -Scott Dong
+//Hi hello new student programmers. I hope you have S names. I like people with S names. Ask Sam she knows. 
+// Hall of Programmers Scott Dong (2017), (Your name + year here!)
 public class Robot extends IterativeRobot {
 private static final int DELIVERY_DISTANCE = 380;
 private static final int GEARDROP_DISTANCE = 1300;
-//	Definitions of Objects
+//	Definitions of Objects. This is like the dictionary it explains what an object is
 	DoubleSolenoid Piston1 = new DoubleSolenoid(0, 1);
 	DoubleSolenoid Piston2 = new DoubleSolenoid(2, 3);
 	DoubleSolenoid Hand = new DoubleSolenoid(4, 5);
@@ -147,6 +149,8 @@ private static final int GEARDROP_DISTANCE = 1300;
 		
 	}
 //	Troubleshoots robots. Identifies which robot code is being uploaded to and uses a specific motorsetup. WARNING Resetting roborio will make code unusable.
+//	Fun Fact. This is how Stella got officially named, since the code rquired us to name the roboRio to tell the difference between the robots
+//	Fun Fun Fact. I chose the name Stella because I love astronomy and Stella means star. Plus it's an S name
 	private void motorSetup(double speedFactor, boolean safetyEnabled) {
 		File cpuInfoFile = new File("/etc/RobotName");
 		String line = null;
@@ -192,6 +196,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 
 	private void visionTrackingCamera() {
 //		Used grip program to filter and identify reflective tape. Finds middle of tape and calculates distance based on the distance between two tapes
+//		
 		// TODO Auto-generated method stub
 		camera.setResolution(320, 240);
 		Object imgLock = new Object();
@@ -273,9 +278,9 @@ private static final int GEARDROP_DISTANCE = 1300;
 	public void autonomousInit() {
 		motorSetup(1.0, false);
 		visionTrackingCamera();
-//		Change line below to change code for position of robot LEFt/RIGHT/CENTER to determine case scenarios
 		centerX = 160;
 		seenAtLeastOnce = false;
+//		Change line below to change code for position of robot LEFt/RIGHT/CENTER to determine case scenarios
 		startPosition = StartPosition.FOLLOW;
 		
 		timer.reset();
@@ -350,7 +355,8 @@ private static final int GEARDROP_DISTANCE = 1300;
 		
 	}
 	private void visionDrive() {
-// Follows and tracks tape, drives towards it
+// Follows and tracks tape, drives towards it. It will also correct itself so that the center of the tapes will be in the middle of the screen/robot
+// This pretty much makes her like a trained dog. They both like shiny things
 			double curve;
 			curve = 0.0;
 			if (System.currentTimeMillis() - lastTimeSeen < 250){
@@ -376,7 +382,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 	 */
 	@Override
 	public void teleopInit() {
-//		Power of the motor. 1= 100% and 0=0% 90% is optimal 
+//		Power of the motor. Change the value in motorSetup to whatever speed desired. 1= 100% and 0=0% 90% is optimal 
 		motorSetup(0.90, true);
 		if (visionThread != null) {
 			visionThread.interrupt();
@@ -445,7 +451,11 @@ private static final int GEARDROP_DISTANCE = 1300;
 		}
 	}
 	
-// Good luck next years students. I hardly understood the code, hope you can figure it out suckers -Scott Dong P.S. Be good to Stella and take care of her. Tell her I love her
+// Good luck next years students. I hope you do better than I did. I barely understood the code, hope you can make sense of it! -Scott Dong
+//	P.S. Be good to Stella and take care of her. Tell her I love her. 
+// 
+// 
+	
 	/**
 	 * This function is called periodically during test mode
 	 */
