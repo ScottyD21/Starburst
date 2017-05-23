@@ -186,6 +186,11 @@ private static final int GEARDROP_DISTANCE = 1300;
 				rearLeft = new ScaledCANTalon(4, speedFactor);
 				frontRight = new ScaledCANTalon(2, speedFactor);
 				rearRight = new ScaledCANTalon(1, speedFactor);
+				
+				frontLeft.setInverted(true);
+				rearLeft.setInverted(true);
+				frontRight.setInverted(true);
+				rearRight.setInverted(true);
 			}else{
 				System.out.println("I don't know robotname" + line);
 			}
@@ -281,7 +286,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 		centerX = 160;
 		seenAtLeastOnce = false;
 //		Change line below to change code for position of robot LEFt/RIGHT/CENTER to determine case scenarios
-		startPosition = StartPosition.FOLLOW;
+		startPosition = StartPosition.CENTER;
 		
 		timer.reset();
 		if (startPosition == StartPosition.LEFT){
@@ -363,18 +368,12 @@ private static final int GEARDROP_DISTANCE = 1300;
 				curve = (((double) centerX) - 160.0) / 400.0;
 				myRobot.drive(-0.15, curve);
 			}
-			if (separationDistance > 150){
-				myRobot.drive(0.0, curve);
-			}
-			
-			
-//			}
-//			if (timer.get() > 7.5){
-//				myRobot.drive(0.0, 0.0);
-//				autoState = AutoState.GEARDROP;
-//				visionFinished = timer.get();
+			if (timer.get() > 7.5){
+				myRobot.drive(0.0, 0.0);
+				autoState = AutoState.GEARDROP;
+				visionFinished = timer.get();
 	}
-			
+	}
 
 	/**
 	 * This function is called once each time the robot enters tele-operated
@@ -428,7 +427,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 		}
 	
 		if (Drivestick.getRawButton(5) || Armstick.getRawButton(5)) {
-			RopeClimb.set(-0.95);
+			RopeClimb.set(-1.0);
 	}else{
 		RopeClimb.set(0.0);
 	}
