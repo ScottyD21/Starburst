@@ -313,7 +313,12 @@ private static final int GEARDROP_DISTANCE = 1300;
 		case FOLLOW:
 			autoState = AutoState.VISION;
 		case STARTCENTER:
-			autoState = AutoState.VISION;
+//			autoState = AutoState.VISION;
+			if (timer.get() < 5.00) {
+				myRobot.drive (-0.50, 0.50);
+			}else{
+				myRobot.drive(0.0, 0.0);
+			}
 			break;
 		case STARTLEFT:
 			if (timer.get() < 1.20) {
@@ -369,7 +374,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 			curve = 0.0;
 			if (System.currentTimeMillis() - lastTimeSeen < 250){
 				curve = (((double) centerX) - 160.0) / 400.0;
-				myRobot.drive(-0.15, curve);
+				myRobot.drive(-0.25, curve);
 			}
 			if (timer.get() > 7.5){
 				myRobot.drive(0.0, 0.0);
