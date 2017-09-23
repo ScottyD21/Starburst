@@ -69,7 +69,7 @@ private static final int GEARDROP_DISTANCE = 1300;
 	SpeedController frontLeft;
 	SpeedController rearLeft;
 	SpeedController frontRight; 
-	SpeedController rearRight;
+	SpeedController rearRight; 
 	SpeedController RopeClimb = new CANTalon(5);
 	Joystick Drivestick = new Joystick(0);
 	Joystick Armstick = new Joystick(1);
@@ -182,15 +182,18 @@ private static final int GEARDROP_DISTANCE = 1300;
 
 			}else if (line.equals("Summer")) {
 				robotName = RobotName.SUMMER;
-				frontLeft = new ScaledCANTalon(3, speedFactor);
-				rearLeft = new ScaledCANTalon(4, speedFactor);
-				frontRight = new ScaledCANTalon(2, speedFactor);
-				rearRight = new ScaledCANTalon(1, speedFactor);
+				frontLeft = new ScaledCANTalon(1, speedFactor);
+				rearLeft = new ScaledCANTalon(2, speedFactor);
+				frontRight = new ScaledCANTalon(3, speedFactor);
+				rearRight = new ScaledCANTalon(4, speedFactor);
 				
 				frontLeft.setInverted(true);
 				rearLeft.setInverted(true);
 				frontRight.setInverted(true);
 				rearRight.setInverted(true);
+				
+				
+			
 			}else{
 				System.out.println("I don't know robotname" + line);
 			}
